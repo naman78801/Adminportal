@@ -1,0 +1,20 @@
+.welcome-container {
+    height: 100vh;
+    width: 100%;
+ 
+ 
+  
+    background-image: linear-gradient(to left top, #000000, #342b39, #425b7c, #1596b1, #3cd1bd);
+}
+
+.con-1{
+    display: flex;
+    justify-content: center;
+    padding-top: 13rem;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 2rem;
+    color: wheat;
+    font-weight:1200 ;
+}
+
+/* https://www.joshwcomeau.com/gradient-generator?colors=000066|ffea00&angle=300&colorMode=hcl&precision=8&easingCurve=0.4353448275862069|0.7760641163793104|0.5732758620689655|0.23727101293103448 */
