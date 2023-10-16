@@ -26,6 +26,7 @@ function App() {
 
           <Route exact path='/home' element={<Home />} />
           <Route exact path='/home/register' element={<AddUser />} />
+          <Route exact path='/home/update/:id' element={<AddUser />} />
           <Route exact path='/home/view/:id' element={<View />} />
 
         </Routes>

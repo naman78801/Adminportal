@@ -1,10 +1,10 @@
-
-import { nanoid } from "@reduxjs/toolkit";
+ 
 import React, { useState, useEffect, useRef, useInsertionEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { addUser, getUser } from "../reducers/userSlice";
+import { addUser, getUser ,updateUser} from "../reducers/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import validator from "validator"; 
 
 const initialState = {
     name: "",
@@ -18,7 +18,8 @@ const AddUser = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
- 
+    const {id}=useParams();
+
     const { user } = useSelector(state => state.user);
 
     const [state, setState] = useState(initialState);
@@ -26,35 +27,48 @@ const AddUser = () => {
     const { name, email, phone, status } = state;
 
 
-     
+       
 
-    useEffect(() => { 
+    useEffect(() => {
+        dispatch( getUser(id) );
         setState({ ...user });
-    }, [user])
+    }, [user,id])
 
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!name || !email || !phone) {
-            toast.error("Please provide value into each input field");
+
+        const uemail = validator.isEmail(email);
+        const uphone = validator.isMobilePhone(phone);
+        
+        if (!uemail || !uphone) {
+            toast.error("email or phone is wrong");
+        }
+        else if (!name || !email || !phone || name.charAt(0) == ' ') {
+            toast.error("Field not be empty or whitespace character");
         } else {
- 
-                       
-            dispatch(addUser(state))
-            toast.success("contact added successfully")
-            setTimeout(() => navigate('/home'),1000)
+
+            if( !id ){
+                dispatch(addUser(state))
+                toast.success("contact added successfully")
+                }
+                else{
+                  dispatch(updateUser(state))
+                  toast.success("contact updated successfully")
+                }
+           
+            setTimeout(() => navigate('/home'), 1000)
         }
     };
 
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setState({ ...state, [name]: value });
-      
+        setState({ ...state, [name]: value });         
 
     };
 
- 
+
     return (
         <>
 
@@ -75,7 +89,7 @@ const AddUser = () => {
                             name="name"
                             placeholder="Your Name ..."
                             value={name || ""}
-                            onChange={handleInputChange}
+                            onChange={handleInputChange} required
                         />
 
 
@@ -87,11 +101,9 @@ const AddUser = () => {
                         <input
                             type="email"
                             className="form-control"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp" 
                             name="email"
                             placeholder="Your email ..."
-                            value={email || ""}
+                            value={email || ""} required
                             onChange={handleInputChange}
                         />
                     </div>
@@ -102,7 +114,7 @@ const AddUser = () => {
                             Phone
                         </label>
                         <input
-                            type="phone"
+                            type="tel"
                             name="phone"
                             placeholder="Your phone no...."
                             className="form-control"
@@ -110,11 +122,12 @@ const AddUser = () => {
                             onChange={handleInputChange}
                             id="exampleInputEmail1"
                             aria-describedby="emailHelp"
+                            required
                         />
                     </div>
+ 
+                    <input type="submit" className="form__button"  value= { id ? "Update" : "Save"} />
 
-                    <input type="submit" className="form__button"/>
-                       
                 </form>
             </div>
         </>

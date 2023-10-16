@@ -7,15 +7,18 @@ import { deleteUser, login } from "../reducers/userSlice";
 import Pagination from './Pagination';
 import Search from './Search';
 
+import { useMemo } from 'react';
+// import UserList from './UserList';
+
 
 const Home = () => {
   const { users, Filter, isAdmin } = useSelector(state => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  // const [text]=useState(Filter)
-  // console.log(Filter)
-
+ 
+ 
+  //sort
+  
   const addUser = () => {
     navigate('/home/register');
   }
@@ -24,7 +27,6 @@ const Home = () => {
       window.confirm("Are you sure that you wanted to delete that contact ?")
     ) {
 
-      console.log(id)
       dispatch(deleteUser(id))
       toast.success("Contact deleted successfully");
       navigate('/home');
@@ -49,11 +51,33 @@ const Home = () => {
   const recordsPerPage = 3;
   const lastIndex = recordsPerPage * currentPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = users.slice(firstIndex, lastIndex);
+  // const records = users.slice(firstIndex, lastIndex);
   const nPages = Math.ceil(users.length / recordsPerPage);
 
+  // console.log( nPages+ "      ..........")
 
 
+  const records = useMemo(() => {
+
+
+    let computedTodos = users;
+
+    if (Filter) {
+
+      computedTodos = computedTodos.filter(
+        todo =>
+          todo.name.toLowerCase().startsWith(Filter.toLowerCase())
+      );
+    }
+ 
+    return computedTodos.slice(
+      firstIndex, lastIndex
+    );
+  }, [users, currentPage, Filter]); 
+
+
+
+  
   return (
     <>
 
@@ -73,18 +97,23 @@ const Home = () => {
       </nav>
 
       {/* ------------data------------ */}
-      <div className="container mt-3 mb-4"  >
+      <div className="container mt-3 mb-4 "  >
         <div className="col-lg-9 mt-4 mt-lg-0">
 
 
 
           <div><Search /></div>
 
+
+
           <div className="row">
 
             <div className="col-md-12">
-              <div className="user-dashboard-info-box table-responsive mb-0 bg-white p-4 shadow-sm">
-                <table className="table manage-candidates-top mb-0">
+              <div className="user-dashboard-info-box table-responsive mb-0  bg-danger p-4 shadow-sm">
+
+
+       
+                <table className="table manage-candidates-top mb-0  ">
                   <thead>
                     <tr>
                       <th>Candidate Name</th>
@@ -96,8 +125,7 @@ const Home = () => {
 
                     {
 
-                      records.filter((item) => { return item.name.toLowerCase().startsWith(Filter) }).map((item, index) =>
-
+                      records.map((item, index) =>
                         <tr className="candidates-list" key={item.id}>
                           <td className="title">
                             <div className="thumb">
@@ -124,7 +152,9 @@ const Home = () => {
                           <td>
                             <ul className="list-unstyled mb-0 d-flex justify-content-end">
                               <li><a href={`/home/view/${item.id}`} className="text-primary" data-toggle="tooltip" title="" data-original-title="view"><i className="far fa-eye"></i></a></li>
-                              <li><a href="#" className="text-info" data-toggle="tooltip" title="" data-original-title="Edit"> <i className="fas fa-pencil-alt"></i>  </a></li>
+
+                              <li><a href={`/home/update/${item.id}`} className="text-info" data-toggle="tooltip" title="" data-original-title="Edit" > <i className="fas fa-pencil-alt"></i>  </a></li>
+
                               <li><a href="#" className="text-danger" data-toggle="tooltip" title="" data-original-title="Delete" onClick={() => removeItem(item.id)}><i className="far fa-trash-alt"></i></a></li>
                             </ul>
                           </td>
@@ -133,14 +163,14 @@ const Home = () => {
 
                   </tbody>
                 </table>
-
-
                 {/* //-------pagination--- */}
-                <div> <Pagination nPages={nPages} currentPage={currentPage} setCurrentPage={setCurrentPage} /> </div>
+                {records.length!=0 ?  <Pagination nPages={nPages} currentPage={currentPage} setCurrentPage={setCurrentPage}/> : <div>data not found</div>}
 
               </div>
             </div>
           </div>
+
+
         </div>
       </div>
 

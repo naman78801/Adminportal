@@ -13,8 +13,7 @@ const initialState = {
     ,
     isAdmin: "false"
 }
-
-// const userList = JSON.parse(localStorage.getItem("user"));
+ 
 
 export const userSlice = createSlice({
 
@@ -48,10 +47,13 @@ export const userSlice = createSlice({
 
         },
 
-        // updateUser: (state, action) => {
-        //     state.contacts = state.contacts.map
-        //         ((item) => item.id === action.payload ? action.payload : item);
-        // },
+        updateUser: (state, action) => { 
+                const filtered = state.users.filter(item => item.id !== action.payload.id);
+                state.users = filtered;
+                filtered.push(action.payload);
+                localStorage.setItem('user', JSON.stringify(filtered));
+     
+        },
         setFilter:(state,action)=>{
               
               state.Filter=action.payload;
@@ -62,6 +64,6 @@ export const userSlice = createSlice({
 
 })
 
-export const { getUser, addUser, deleteUser, login,setFilter } = userSlice.actions
+export const { getUser, addUser, deleteUser, login,setFilter ,updateUser} = userSlice.actions
 
 export default userSlice.reducer;

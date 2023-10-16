@@ -9,7 +9,9 @@ const Search = () => {
     const navigate =useNavigate();
 
     const handleInputChange = (e) => {
-            setText(e.target.value);
+           
+            // if(e.target.value !== null)
+                setText(e.target.value);
            dispatch(setFilter(text))
     } 
 
@@ -18,7 +20,7 @@ const Search = () => {
         <>
             <form onSubmit={(e) => e.preventDefault} className="d-flex mb-3">
                 <input  className="form-control me-2  text-cyan-950" list="datalistOptions" id="exampleDataList" type='text' name='name' placeholder='search...' value={text} onChange={handleInputChange} />
-                <button onClick={()=>navigate('/home')}  className="btn btn-outline-success w-40 ">clear filter</button>
+                <button onClick={()=>navigate('/home')}  className="btn btn-dark w-40 fw-bold ">clear filter</button>
             </form>
         </>
     )
