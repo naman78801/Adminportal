@@ -3,22 +3,22 @@ import './styles/home.css'
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteUser, login } from "../reducers/userSlice";
+import { deleteUser, logout } from "../reducers/userSlice";
 import Pagination from './Pagination';
 import Search from './Search';
 
 import { useMemo } from 'react';
-// import UserList from './UserList';
 
 
 const Home = () => {
+  
   const { users, Filter, isAdmin } = useSelector(state => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+
  
- 
-  //sort
-  
+
   const addUser = () => {
     navigate('/home/register');
   }
@@ -34,12 +34,15 @@ const Home = () => {
   };
 
   const handleLogout = () => {
-    if (
-      window.confirm("Are you sure that you wanted to logout ?")
-    ) {
-      dispatch(login('false'));
-      navigate('/')
-    }
+    
+      if (
+        window.confirm("Are you sure that you wanted to logout ?")
+      ) {
+        dispatch(logout());
+        navigate('/')
+      }
+    
+
   }
 
 
@@ -69,15 +72,15 @@ const Home = () => {
           todo.name.toLowerCase().startsWith(Filter.toLowerCase())
       );
     }
- 
+
     return computedTodos.slice(
       firstIndex, lastIndex
     );
-  }, [users, currentPage, Filter]); 
+  }, [users, currentPage, Filter]);
 
 
 
-  
+
   return (
     <>
 
@@ -99,20 +102,12 @@ const Home = () => {
       {/* ------------data------------ */}
       <div className="container mt-3 mb-4 "  >
         <div className="col-lg-9 mt-4 mt-lg-0">
-
-
-
           <div><Search /></div>
-
-
-
           <div className="row">
 
             <div className="col-md-12">
               <div className="user-dashboard-info-box table-responsive mb-0  bg-danger p-4 shadow-sm">
 
-
-       
                 <table className="table manage-candidates-top mb-0  ">
                   <thead>
                     <tr>
@@ -163,8 +158,9 @@ const Home = () => {
 
                   </tbody>
                 </table>
+
                 {/* //-------pagination--- */}
-                {records.length!=0 ?  <Pagination nPages={nPages} currentPage={currentPage} setCurrentPage={setCurrentPage}/> : <div>data not found</div>}
+                {records.length != 0 ? <Pagination nPages={nPages} currentPage={currentPage} setCurrentPage={setCurrentPage} /> : <div>data not found</div>}
 
               </div>
             </div>

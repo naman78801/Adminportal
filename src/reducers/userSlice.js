@@ -2,6 +2,7 @@ import { createSlice, nanoid } from "@reduxjs/toolkit";
 
 
 const initialState = {
+    isAdmin:"false",
     users:localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : [],
     Filter: "",
     user: {
@@ -10,8 +11,8 @@ const initialState = {
         phone: "",
         status: "Active",
     }
-    ,
-    isAdmin: "false"
+    
+    
 }
  
 
@@ -21,14 +22,17 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
 
-        login: (state, action) => {
-            state.isAdmin = action.payload;
-
+        login: (state) => {
+        
+            state.isAdmin = "true";
         },
+        logout: (state) => {
+            state.isAdmin = "false";
+        },
+
         getUser: (state, action) => {
             state.user = state.users.find((data) => data.id == action.payload);
-
-            // console.log(state.user)
+ 
         },
         addUser: (state, action) => {
             const newData = {
@@ -64,6 +68,6 @@ export const userSlice = createSlice({
 
 })
 
-export const { getUser, addUser, deleteUser, login,setFilter ,updateUser} = userSlice.actions
+export const { getUser, addUser, deleteUser, login,logout,setFilter ,updateUser} = userSlice.actions
 
 export default userSlice.reducer;

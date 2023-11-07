@@ -42,7 +42,7 @@ const Login = () => {
     if (email && password) {
       if (email === userName && password === userPassword) {
         toast.success("Login Successful");
-        dispatch(login('true'));
+        dispatch(login());
         navigate("/home");
       } else {
         navigate("/login");
