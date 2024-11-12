@@ -3,7 +3,7 @@ name: Deloyment on s3 using github action
 on:
   push:
     branches:
-    - master
+    - main
 
 jobs:
   build-and-deploy:
